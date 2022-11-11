@@ -7,7 +7,7 @@ from rest_framework.request import Request
 from rest_framework import status
 import requests
 
-baseurl = "http://localhost/webdervice/rest/server.php"
+baseurl = "http://20.204.221.147/webservice/rest/server.php"
 
 
 class ProcessDiscussionView(APIView):
@@ -15,18 +15,22 @@ class ProcessDiscussionView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request: Request, format=None):
-        post_id = request.data['posi_id']
+        post_id = request.data['post_id']
         token = request.data['token']
-
+        course_id = request.data['course']
+        self.get_post_detail(post_id,token,course_id)
         return Response(status=status.HTTP_200_OK)
 
     def get_post_detail(self, post_id, token, course_id):
         response = requests.get(
-            f"{baseurl}?wstoken={token}&wsfunction=mod_forum_get_discussion_post&moodlewsrestformat=json")
+            f"{baseurl}?wstoken={token}&wsfunction=mod_forum_get_discussion_post&moodlewsrestformat=json",params={
+                    "postid":post_id,
+                })
+        
         if response.status_code == 200:
-            subject = response.text["subject"]
-            message = response.text["message"]
-            reply_subject = response.text["replysubject"]
+            subject = response.json()["post"]["subject"]
+            message = response.json()["post"]["message"]
+            reply_subject = response.json()["post"]["replysubject"]
             reply_message = self.process_post(subject, message, course_id, token)
             self.reply(reply_message, reply_subject, token, post_id)
 
