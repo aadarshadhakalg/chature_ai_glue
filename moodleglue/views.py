@@ -26,8 +26,10 @@ class ProcessDiscussionView(APIView):
             f"{baseurl}?wstoken={token}&wsfunction=mod_forum_get_discussion_post&moodlewsrestformat=json",params={
                     "postid":post_id,
                 })
+
         
         if response.status_code == 200:
+            print(response.json())
             subject = response.json()["post"]["subject"]
             message = response.json()["post"]["message"]
             reply_subject = response.json()["post"]["replysubject"]
