@@ -80,9 +80,10 @@ class ProcessDiscussionView(APIView):
             add_course_log(course_id=course_id, shortname=shortname, fullname=fullname, displayname=displayname,
                            summary=summary, timemodified=timemodified)
 
+
         course_contents = requests.get(baseurl, params={
             "wstoken": token,
-            "wsfunction": " core_course_get_contents",
+            "wsfunction": "core_course_get_contents",
             "courseid": course_id,
             "moodlewsrestformat": "json",
         })
