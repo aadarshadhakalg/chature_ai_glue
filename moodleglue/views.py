@@ -75,9 +75,10 @@ class ProcessDiscussionView(APIView):
             fullname = course_detail.json()[0]['fullname']
             displayname = course_detail.json()[0]['fullname']
             summary = course_detail.json()[0]['summary']
+            timemodified = course_detail.json()[0]['timemodified']
 
             add_course_log(course_id=course_id, shortname=shortname, fullname=fullname, displayname=displayname,
-                           summary=summary)
+                           summary=summary,timemodified=timemodified)
 
         course_contents = requests.get(baseurl, params={
             "wstoken": token,

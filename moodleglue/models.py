@@ -10,6 +10,7 @@ class Course(models.Model):
     displayname = models.CharField(max_length=255)
     shortname = models.CharField(max_length=100)
     summary = models.TextField()
+    timemodified = models.BigIntegerField(default=0)
 
 
 class DiscussionsLog(models.Model):
