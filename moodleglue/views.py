@@ -97,13 +97,16 @@ class ProcessDiscussionView(APIView):
                 modules = section["modules"]
 
                 for module in modules:
-                    contents = module["contents"]
-                    if contents is None:
-                        contents = []
+                    try:
+                        contents = module["contents"]
+                        if contents is None:
+                            contents = []
 
-                    for content in contents:
-                        if content['type'] == "file":
-                            filename = content['filename']
-                            fileurl = content['fileurl']
+                        for content in contents:
+                            if content['type'] == "file":
+                                filename = content['filename']
+                                fileurl = content['fileurl']
 
-                            add_attachments(course=course_id, filename=filename, fileurl=fileurl)
+                                add_attachments(course=course_id, filename=filename, fileurl=fileurl)
+                    except:
+                        pass
