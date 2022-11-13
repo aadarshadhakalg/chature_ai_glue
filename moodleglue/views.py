@@ -38,11 +38,11 @@ class ProcessDiscussionView(APIView):
             message = response.json()["post"]["message"]
             reply_subject = response.json()["post"]["replysubject"]
             authors_name = response.json()["post"]["author"]["fullname"]
-            authors_name = response.json()["post"]["author"]["urls"]["profile"]
+            authors_profile = response.json()["post"]["author"]["urls"]["profile"]
             reply_message = self.process_post(subject, message, course_id, token)
 
             add_discussion_log(authors_name=authors_name, subject=subject, reply_subject=reply_subject, message=message,
-                               course=course_id)
+                               course=course_id,authors_profile=authors_profile)
 
             self.reply(reply_message, reply_subject, token, post_id)
 
