@@ -84,6 +84,7 @@ class ProcessDiscussionView(APIView):
             "wstoken": token,
             "wsfunction": " core_course_get_contents",
             "moodlewsrestformat": "json",
+            "course_id":course_id,
         })
 
         if course_contents.status_code == 200:
@@ -95,13 +96,11 @@ class ProcessDiscussionView(APIView):
                 modules = section["modules"]
 
                 for module in modules:
-                    module = json.loads(module)
                     contents = module["contents"]
                     if contents is None:
                         contents = []
 
                     for content in contents:
-                        content = json.loads(content)
                         if content['type'] == "file":
                             filename = content['filename']
                             fileurl = content['fileurl']
