@@ -66,7 +66,7 @@ class ProcessDiscussionView(APIView):
             "wsfunction": "core_course_get_courses",
             "options[ids][0]": course_id,
         })
-
+        print(course_detail)
         if course_detail.status_code == 200:
             shortname = course_detail.json()[0]['shortname']
             fullname = course_detail.json()[0]['fullname']
