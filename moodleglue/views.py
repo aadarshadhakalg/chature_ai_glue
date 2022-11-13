@@ -84,6 +84,7 @@ class ProcessDiscussionView(APIView):
 
 
             if added:
+                    delete_attachments(course=course_id)
                     course_contents = requests.get(baseurl, params={
                         "wstoken": token,
                         "wsfunction": "core_course_get_contents",
