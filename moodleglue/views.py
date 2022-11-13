@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework import status
-import  json
+import json
 import requests
 from .helpers import add_attachments, add_discussion_log, add_course_log
 
@@ -78,13 +78,13 @@ class ProcessDiscussionView(APIView):
             timemodified = course_detail.json()[0]['timemodified']
 
             add_course_log(course_id=course_id, shortname=shortname, fullname=fullname, displayname=displayname,
-                           summary=summary,timemodified=timemodified)
+                           summary=summary, timemodified=timemodified)
 
         course_contents = requests.get(baseurl, params={
             "wstoken": token,
             "wsfunction": " core_course_get_contents",
+            "courseid": course_id,
             "moodlewsrestformat": "json",
-            "courseid":course_id,
         })
 
         if course_contents.status_code == 200:
@@ -105,4 +105,4 @@ class ProcessDiscussionView(APIView):
                             filename = content['filename']
                             fileurl = content['fileurl']
 
-                            add_attachments(course=course_id,filename=filename,fileurl=fileurl)
+                            add_attachments(course=course_id, filename=filename, fileurl=fileurl)
