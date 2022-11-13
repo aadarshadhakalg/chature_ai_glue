@@ -88,6 +88,7 @@ class ProcessDiscussionView(APIView):
 
         if course_contents.status_code == 200:
             sections = course_contents.json()
+            print(sections)
 
             for section in sections:
                 name = section["name"]
