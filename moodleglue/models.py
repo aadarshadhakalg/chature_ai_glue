@@ -12,6 +12,9 @@ class Course(models.Model):
     summary = models.TextField()
     timemodified = models.BigIntegerField(default=0)
 
+    def __str__(self):
+        return self.displayname
+
 
 class DiscussionsLog(models.Model):
     created_at = models.DateTimeField(auto_now=True)
@@ -27,8 +30,14 @@ class DiscussionsLog(models.Model):
     answer = models.TextField(null=True,blank=True)
     updated_on = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.subject
+
 
 class Attachments(models.Model):
     file = models.URLField()
     course = models.ForeignKey(to=Course, on_delete=models.CASCADE)
     filename = models.CharField(max_length=500, null=True, blank=True)
+
+    def __str__(self):
+        return self.filename
