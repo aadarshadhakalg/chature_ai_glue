@@ -9,13 +9,15 @@ def add_discussion_log(authors_profile, authors_name, subject, reply_subject, me
 
 
 def add_course_log(displayname, course_id, shortname, fullname, summary, timemodified):
-
-    course = Course.objects.get(course_id=course_id)
-    if course is not None:
+    try:
+        course = Course.objects.get(course_id=course_id)
         if course.timemodified >= timemodified:
             return
         else:
             course.delete()
+    except:
+        pass
+
     course_log = Course.objects.create(displayname=displayname, course_id=course_id, shortname=shortname,
                                        fullname=fullname, summary=summary, timemodified=timemodified)
     course_log.save()
