@@ -84,7 +84,7 @@ class ProcessDiscussionView(APIView):
             "wstoken": token,
             "wsfunction": " core_course_get_contents",
             "moodlewsrestformat": "json",
-            "course_id":course_id,
+            "courseid":course_id,
         })
 
         if course_contents.status_code == 200:
