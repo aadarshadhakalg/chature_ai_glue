@@ -27,7 +27,7 @@ def add_course_log(displayname, course_id, shortname, fullname, summary, timemod
 
 
 def delete_attachments(course):
-    Attachments.objects.get(course_id=course).delete()
+    Attachments.objects.filter(course_id=course).delete()
 
 def add_attachments(course, filename, fileurl):
     attachment = Attachments.objects.create(file=fileurl, course_id=course, filename=filename)
