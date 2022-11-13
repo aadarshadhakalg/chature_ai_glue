@@ -13,7 +13,7 @@ def add_course_log(displayname, course_id, shortname, fullname, summary, timemod
     try:
         course = Course.objects.get(course_id=course_id)
         if course.timemodified >= timemodified:
-            return
+            return False
         else:
             course.delete()
     except:
@@ -22,7 +22,12 @@ def add_course_log(displayname, course_id, shortname, fullname, summary, timemod
     course_log = Course.objects.create(displayname=displayname, course_id=course_id, shortname=shortname,
                                        fullname=fullname, summary=summary, timemodified=timemodified)
     course_log.save()
+    return True
 
+
+
+def delete_attachments(course):
+    Attachments.objects.get(course_id=course).delete()
 
 def add_attachments(course, filename, fileurl):
     attachment = Attachments.objects.create(file=fileurl, course_id=course, filename=filename)

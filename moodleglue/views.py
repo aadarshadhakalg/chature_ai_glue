@@ -7,7 +7,7 @@ from rest_framework.request import Request
 from rest_framework import status
 import json
 import requests
-from .helpers import add_attachments, add_discussion_log, add_course_log
+from .helpers import add_attachments, add_discussion_log, add_course_log,delete_attachments
 
 baseurl = "http://20.204.221.147/webservice/rest/server.php"
 
@@ -79,36 +79,38 @@ class ProcessDiscussionView(APIView):
             summary = course_detail.json()[0]['summary']
             timemodified = course_detail.json()[0]['timemodified']
 
-            add_course_log(course_id=course_id, shortname=shortname, fullname=fullname, displayname=displayname,
+            added = add_course_log(course_id=course_id, shortname=shortname, fullname=fullname, displayname=displayname,
                            summary=summary, timemodified=timemodified)
 
 
-        course_contents = requests.get(baseurl, params={
-            "wstoken": token,
-            "wsfunction": "core_course_get_contents",
-            "courseid": course_id,
-            "moodlewsrestformat": "json",
-        })
+            if added:
+                    delete_attachments(course=course_id)
+                    course_contents = requests.get(baseurl, params={
+                        "wstoken": token,
+                        "wsfunction": "core_course_get_contents",
+                        "courseid": course_id,
+                        "moodlewsrestformat": "json",
+                    })
 
-        if course_contents.status_code == 200:
-            sections = course_contents.json()
-            print(sections)
+                    if course_contents.status_code == 200:
+                        sections = course_contents.json()
+                        print(sections)
 
-            for section in sections:
-                name = section["name"]
-                modules = section["modules"]
+                        for section in sections:
+                            name = section["name"]
+                            modules = section["modules"]
 
-                for module in modules:
-                    try:
-                        contents = module["contents"]
-                        if contents is None:
-                            contents = []
+                            for module in modules:
+                                try:
+                                    contents = module["contents"]
+                                    if contents is None:
+                                        contents = []
 
-                        for content in contents:
-                            if content['type'] == "file":
-                                filename = content['filename']
-                                fileurl = content['fileurl']
+                                    for content in contents:
+                                        if content['type'] == "file":
+                                            filename = content['filename']
+                                            fileurl = content['fileurl']
 
-                                add_attachments(course=course_id, filename=filename, fileurl=fileurl)
-                    except:
-                        pass
+                                            add_attachments(course=course_id, filename=filename, fileurl=fileurl)
+                                except:
+                                    pass
