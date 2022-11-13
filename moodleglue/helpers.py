@@ -2,9 +2,10 @@ from .models import DiscussionsLog, Course, Attachments
 
 
 def add_discussion_log(authors_profile, authors_name, subject, reply_subject, message, course):
+    course_obj = Course.objects.get(course_id=course)
     discussion_log = DiscussionsLog.objects.create(authors_profile=authors_profile, authors_name=authors_name,
                                                    subject=subject, reply_subject=reply_subject, message=message,
-                                                   course=course)
+                                                   course=course_obj)
     discussion_log.save()
 
 

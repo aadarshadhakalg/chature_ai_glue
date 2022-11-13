@@ -41,6 +41,8 @@ class ProcessDiscussionView(APIView):
             authors_profile = response.json()["post"]["author"]["urls"]["profile"]
             reply_message = self.process_post(subject, message, course_id, token)
 
+
+
             add_discussion_log(authors_name=authors_name, subject=subject, reply_subject=reply_subject, message=message,
                                course=course_id,authors_profile=authors_profile)
 
