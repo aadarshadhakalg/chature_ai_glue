@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework import status
+import  json
 import requests
 from .helpers import add_attachments, add_discussion_log, add_course_log
 
@@ -88,15 +89,18 @@ class ProcessDiscussionView(APIView):
             sections = course_contents.json()
 
             for section in sections:
+                section = json.loads(section)
                 name = section["name"]
                 modules = section["modules"]
 
                 for module in modules:
+                    module = json.loads(module)
                     contents = module["contents"]
                     if contents is None:
                         contents = []
 
                     for content in contents:
+                        content = json.loads(content)
                         if content['type'] == "file":
                             filename = content['filename']
                             fileurl = content['fileurl']
