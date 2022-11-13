@@ -90,7 +90,6 @@ class ProcessDiscussionView(APIView):
             sections = course_contents.json()
 
             for section in sections:
-                section = json.loads(section)
                 name = section["name"]
                 modules = section["modules"]
 
