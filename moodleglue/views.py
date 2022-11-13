@@ -65,6 +65,8 @@ class ProcessDiscussionView(APIView):
             "wstoken": token,
             "wsfunction": "core_course_get_courses",
             "options[ids][0]": course_id,
+            "moodlewsrestformat": "json",
+
         })
         print(course_detail.json())
         if course_detail.status_code == 200:
