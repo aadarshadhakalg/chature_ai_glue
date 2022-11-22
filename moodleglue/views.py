@@ -43,7 +43,7 @@ class ProcessDiscussionView(APIView):
             reply_subject = response.json()["post"]["replysubject"]
             authors_name = response.json()["post"]["author"]["fullname"]
             authors_profile = response.json()["post"]["author"]["urls"]["profile"]
-            reply_message = self.process_post(subject, message, course_id)
+            reply_message = self.process_post(subject, message, course_id,token)
 
             add_discussion_log(id=discussion_id, authors_name=authors_name, subject=subject,
                                reply_subject=reply_subject,
