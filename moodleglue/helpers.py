@@ -1,4 +1,4 @@
-from .models import DiscussionsLog, Course, Attachments
+from .models import DiscussionsLog, Course, Attachments, ExtractedContexts
 import html2text
 import requests
 import re
@@ -20,6 +20,7 @@ def update_reply_id(replyid, discussid):
     discussion_log = DiscussionsLog.objects.get(id=discussid)
     discussion_log.replyid = replyid
     discussion_log.save()
+
 
 def add_course_log(displayname, course_id, shortname, fullname, summary, timemodified):
     try:
@@ -61,10 +62,6 @@ def delete_attachments(course):
     Attachments.objects.filter(course_id=course).delete()
 
 
-def process_attachment():
-    pass
-
-
 def add_attachments(course, filename, fileurl, token):
     attachment = Attachments.objects.create(file=fileurl, course_id=course, filename=filename)
     attachment.save()
@@ -72,13 +69,22 @@ def add_attachments(course, filename, fileurl, token):
 
 
 def process_post_message(subject, message, course, token):
-    attachments = Attachments.objects.get(course=course)
-
     # attachments.file
     text = html2text.html2text(message)
     keywords = [word[1:].replace("_", " ") for word in re.findall(r'\b#\w+', text)]
-    print(keywords)
-    return predict_answer(subject, "AI is a cool subject.")
+
+    course_contexts = ExtractedContexts.objects.filter(course=course)
+    selected_contexts = []
+
+    for context in course_contexts:
+        if any(key.lower() in context.topic.lower() for key in keywords):
+            selected_contexts.append(context)
+
+    if len(selected_contexts) != 0:
+        context = selected_contexts[0].content
+        return predict_answer(subject, context)
+    else:
+        return "Bot couldn't find the solution"
 
 
 def query(payload):
@@ -93,4 +99,4 @@ def predict_answer(question, context):
             "context": context
         },
     })
-    return output
+    return output['answer']

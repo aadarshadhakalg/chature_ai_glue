@@ -53,6 +53,7 @@ class ExtractedContexts(models.Model):
     index = models.CharField(max_length=1000)
     heading_order = models.CharField(max_length=10)
     content = models.TextField()
+    course = models.ForeignKey(to=Course,on_delete=models.CASCADE)
 
     def __str__(self):
         return self.topic
