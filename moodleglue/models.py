@@ -28,9 +28,9 @@ class DiscussionsLog(models.Model):
     replied = models.BooleanField(default=False)
     like_count = models.IntegerField(default=0)
     dislike_count = models.IntegerField(default=0)
-    answer = models.TextField(null=True,blank=True)
+    answer = models.TextField(null=True, blank=True)
     updated_on = models.DateTimeField(auto_now=True)
-    replyid = models.IntegerField(unique=True,null=False,blank=False)
+    replyid = models.IntegerField(null=True,blank=True)
 
     def __str__(self):
         return self.subject
@@ -47,13 +47,13 @@ class Attachments(models.Model):
 
 
 class ExtractedContexts(models.Model):
-    attachment = models.ForeignKey(to=Attachments,on_delete=models.CASCADE)
+    attachment = models.ForeignKey(to=Attachments, on_delete=models.CASCADE)
     topic = models.CharField(max_length=1000)
     page_number = models.CharField(max_length=10)
     index = models.CharField(max_length=1000)
     heading_order = models.CharField(max_length=10)
     content = models.TextField()
-    course = models.ForeignKey(to=Course,on_delete=models.CASCADE)
+    course = models.ForeignKey(to=Course, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.topic
