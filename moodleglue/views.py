@@ -7,8 +7,10 @@ from rest_framework.request import Request
 from rest_framework import status
 import json
 import requests
+
 from .helpers import add_attachments, add_discussion_log, add_course_log, delete_attachments, update_reply_id, like, \
     dislike, process_post_message
+
 
 baseurl = "http://20.204.221.147/webservice/rest/server.php"
 
@@ -47,6 +49,7 @@ class ProcessDiscussionView(APIView):
                                reply_subject=reply_subject,
                                message=message,
                                course=course_id, authors_profile=authors_profile)
+
 
             self.reply(reply_message, reply_subject, token, post_id)
 

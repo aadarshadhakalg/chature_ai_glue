@@ -21,7 +21,6 @@ def update_reply_id(replyid, discussid):
     discussion_log.replyid = replyid
     discussion_log.save()
 
-
 def add_course_log(displayname, course_id, shortname, fullname, summary, timemodified):
     try:
         course = Course.objects.get(course_id=course_id)
