@@ -67,7 +67,7 @@ class ProcessDiscussionView(APIView):
                 "moodlewsrestformat": "json",
             })
         replyid = response.json()["postid"]
-        discussionid = response.json()["parentid"]
+        discussionid = response.json()["post"]["parentid"]
         update_reply_id(replyid=replyid, discussid=discussionid)
         print(response.status_code)
 

@@ -48,11 +48,11 @@ class Attachments(models.Model):
 
 class ExtractedContexts(models.Model):
     attachment = models.ForeignKey(to=Attachments, on_delete=models.CASCADE)
-    topic = models.CharField(max_length=1000)
-    page_number = models.CharField(max_length=10)
-    index = models.CharField(max_length=1000)
-    heading_order = models.CharField(max_length=10)
-    content = models.TextField()
+    topic = models.CharField(max_length=1000,null=True,blank=True)
+    page_number = models.CharField(max_length=10,null=True,blank=True)
+    index = models.CharField(max_length=1000,null=True,blank=True)
+    heading_order = models.CharField(max_length=10,null=True,blank=True)
+    content = models.TextField(null=True,blank=True)
     course = models.ForeignKey(to=Course, on_delete=models.CASCADE)
 
     def __str__(self):

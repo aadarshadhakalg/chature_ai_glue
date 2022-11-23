@@ -71,7 +71,7 @@ def add_attachments(course, filename, fileurl, token):
 def process_post_message(subject, message, course, token):
     # attachments.file
     text = html2text.html2text(message)
-    keywords = [word[1:].replace("_", " ") for word in re.findall(r'\b#\w+', text)]
+    keywords = [word[1:].replace("_", " ") for word in re.findall(r'#\w+', text)]
 
     course_contexts = ExtractedContexts.objects.filter(course=course)
     selected_contexts = []
@@ -93,10 +93,13 @@ def query(payload):
 
 
 def predict_answer(question, context):
-    output = query({
-        "inputs": {
-            "question": question,
-            "context": context
-        },
-    })
-    return output['answer']
+    try:
+        output = query({
+            "inputs": {
+                "question": question,
+                "context": context
+            },
+        })
+        return output['answer']
+    except:
+        output = "Bot couldn't find the solution"
