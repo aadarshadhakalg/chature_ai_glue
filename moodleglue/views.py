@@ -66,6 +66,7 @@ class ProcessDiscussionView(APIView):
                 "wsfunction": "mod_forum_add_discussion_post",
                 "moodlewsrestformat": "json",
             })
+        print(response)
         replyid = response.json()["postid"]
         discussionid = response.json()["post"]["parentid"]
         update_reply_id(replyid=replyid, discussid=discussionid)
