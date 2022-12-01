@@ -205,38 +205,65 @@ def extract_attachment(attachment: Attachments, token):
                         full_context += " " + f
                     df.loc[df["Index"] == heading_number, "Context"] = full_context
                     context = []
+                    first_sub_heading = True
+                    sub_heading_context_number = 0
                 first_heading = False
                 heading_number = k
             elif df.loc[k]['Heading Order'] == 1:
-                if not first_sub_heading:
+                if df.loc[k + 1]['Heading Order'] != 2:
+                    if str(df.loc[sub_heading_number]['Context']) == "nan" or df.loc[sub_heading_number]['Context'] == "":
+                        full_context = ""
+                        for f in context[sub_heading_context_number:]:
+                            full_context += " " + f
+                        df.loc[df["Index"] == sub_heading_number, "Context"] = full_context
+                        sub_heading_context_number = context.__len__()
                     full_context = ""
-                    for f in context[sub_heading_context_number:]:
-                        full_context += " " + f
-                    df.loc[df["Index"] == sub_heading_number, "Context"] = full_context
+                    for i in range(int(df.loc[k]['Page Number']), int(df.loc[k + 1]['Page Number']) + 1):
+                        ctxpg = pdf_reader.getPage(i)
+                        full_context += " " + ctxpg.extract_text()
+                    full_context.replace("\n", " ")
+                    context.append(full_context)
+                    df.loc[df["Index"] == k, "Context"] = full_context
                     sub_heading_context_number = context.__len__()
-                sub_heading_number = k
-                first_sub_heading = False
+                else:
+                    if df.loc[k]['Page Number'] != df.loc[k + 1]['Page Number']:
+                        for i in range(int(df.loc[k]['Page Number']), int(df.loc[k + 1]['Page Number'])):
+                            ctxpg = pdf_reader.getPage(i)
+                            full_context += " " + ctxpg.extract_text()
+                        full_context.replace("\n", " ")
+                        context.append(full_context)
+                    if not first_sub_heading:
+                        full_context = ""
+                        for f in context[sub_heading_context_number:]:
+                            full_context += " " + f
+                        df.loc[df["Index"] == sub_heading_number, "Context"] = full_context
+                        sub_heading_context_number = context.__len__()
+                    sub_heading_number = k
+                    first_sub_heading = False
             else:
                 full_context = ""
                 for i in range(int(df.loc[k]['Page Number']), int(df.loc[k + 1]['Page Number']) + 1):
                     ctxpg = pdf_reader.getPage(i)
                     full_context += " " + ctxpg.extract_text()
+                full_context.replace("\n", " ")
                 context.append(full_context)
                 df.loc[df["Index"] == k, "Context"] = full_context
 
         for i in range(int(df.loc[k + 1]['Page Number']), pdf_reader.getNumPages()):
             ctxpg = pdf_reader.getPage(i)
             full_context += " " + ctxpg.extract_text()
-            context.append(full_context)
-            df.loc[df["Index"] == k, "Context"] = full_context
-            full_context = ""
-            for f in context[sub_heading_context_number:]:
-                full_context += " " + f
-            df.loc[df["Index"] == sub_heading_number, "Context"] = full_context
-            full_context = ""
-            for f in context:
-                full_context += " " + f
-            df.loc[df["Index"] == heading_number, "Context"] = full_context
+        full_context.replace("\n", " ")
+        context.append(full_context)
+        df.loc[df["Index"] == k, "Context"] = full_context
+        full_context = ""
+        for f in context[sub_heading_context_number:]:
+            full_context += " " + f
+        df.loc[df["Index"] == sub_heading_number, "Context"] = full_context
+        full_context = ""
+        for f in context:
+            full_context += " " + f
+        df.loc[df["Index"] == heading_number, "Context"] = full_context
+        df = df.replace({r'\s+$': '', r'^\s+': ''}, regex=True).replace(r'\n', ' ', regex=True)
 
         # writing into the file
 
